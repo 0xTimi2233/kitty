@@ -1,0 +1,39 @@
+# Codex project config 示例
+# 放到项目根 .codex/config.toml 后才会生效。
+# 仅作为参考；不要直接覆盖你现有配置。
+
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+
+[features]
+multi_agent = true
+codex_hooks = true
+shell_snapshot = true
+
+[agents]
+max_threads = 6
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[profiles.planning]
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.execution]
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.review]
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+# 如果你希望 Codex 识别额外 instruction 文件，可以启用 fallback。
+# project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]
+# project_doc_max_bytes = 65536
+

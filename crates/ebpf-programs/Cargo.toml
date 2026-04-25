@@ -1,0 +1,9 @@
+[package]
+name = "kitty-ebpf-programs"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+kitty-ebpf-common = { path = "../ebpf-common" }

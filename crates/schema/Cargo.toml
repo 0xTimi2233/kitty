@@ -1,0 +1,16 @@
+[package]
+name = "kitty-schema"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true, features = ["derive", "std"] }
+serde_with = { workspace = true, features = ["macros"] }
+humantime = { workspace = true }
+humantime-serde = { workspace = true }
+macaddr = { workspace = true, features = ["serde_std"] }
+
+[dev-dependencies]
+serde_json = { workspace = true, features = ["std"] }

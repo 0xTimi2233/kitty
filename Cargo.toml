@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "crates/bin",
+    "crates/application",
+    "crates/domain",
+    "crates/infrastructure",
+    "crates/schema",
+    "crates/ebpf-common",
+    "crates/ebpf-programs",
+]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.95"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+serde = { version = "1", default-features = false }
+serde_with = { version = "3", default-features = false }
+serde_json = { version = "1", default-features = false }
+humantime = { version = "2", default-features = false }
+humantime-serde = { version = "1", default-features = false }
+macaddr = { version = "1", default-features = false }

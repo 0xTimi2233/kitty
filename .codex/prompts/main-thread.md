@@ -92,13 +92,21 @@ run 开始时创建 ledger：
 
 允许的 status 为 `queued`、`running`、`completed`、`blocked`、`failed`、`closed`、`stale`。
 
-收到子代理回复、关闭子代理、`$finish` 清理 milestone 上下文前，主线程更新对应行。resume 时，主线程只处理非结束状态的调度记录。结束状态为 `completed`、`failed`、`closed`、`stale`。
+收到子代理回复、关闭子代理、milestone finish 清理 milestone 上下文前，主线程更新对应行。resume 时，主线程只处理非结束状态的调度记录。结束状态为 `completed`、`failed`、`closed`、`stale`。
 
 可恢复记录存在 agent id 时，`$resume` 尝试继续该子代理。无法继续时，主线程将该行标记为 `stale`，并为剩余有界任务追加新的调度记录。
 
 ## 调度规则
 
 正常推进时，主线程根据子代理回报和调度状态安排下一步。主线程不读取角色拥有的 run 产物来替代该角色工作。run 产物用于审计、恢复，以及作为后续 dispatch 输入。
+
+## 决策路由
+
+任一角色发现多个合理路径且选择跨越当前角色边界时，可返回 `Decision Request`。
+
+主线程先根据 `task.md`、`gate.md`、project rules 和既有决策处理。路线明确时，将选择写入 `task.md` 或 fix request，再调度责任角色。
+
+只有 PM 或 Architect 的未决选择进入用户决策 gate。破坏性操作、外部系统和发布动作也需要用户决策。给用户 2-4 个编号选项、影响和推荐项。用户选择后，将结论写入 `task.md` 的 `User decisions`，milestone finish 阶段选择写入 `summary.md`。
 
 ## Review Ledger
 
@@ -124,23 +132,17 @@ Verification:
 
 ## 工作流节点职责
 
-`$plan`：调度 PM，写 `task.md` 和 PM 产物。
+`$brainstorm`：在 planning 前探索需求。主线程主持讨论，只读取用户提供的输入，保持 workflow phase 为 idle，并写 `.agentflow/brainstorm/<brainstorm-id>/`。结束时归档到 `.agentflow/archives/brainstorm/<brainstorm-id>/`。
 
-`$design`：调度 Architect 和 Tester。Architect 写设计、spec、ADR 草案；Tester 根据设计写测试计划。
+`$plan`：当 `.agentflow/state.json.current_brainstorm` 存在时，使用 `.agentflow/brainstorm/<current_brainstorm>/brief.md` 将该 brainstorm 结束为 `ready-for-plan` 或 `discarded`，归档后建议清空聊天上下文再继续。使用主线程指定的 brainstorm `brief.md` 或用户提供的需求输入调度 PM，确认需求、按需更新 vision/roadmap、选择下一 milestone、创建 milestone run、写 `task.md` 和 PM 产物。
 
-`$doc-review`：调度 Doc Reviewer，审查需求、设计、spec、ADR、test plan 的一致性。失败时主线程写 `fix-requests/doc-fix-<n>.md` 并回到 `$design`。
+`$design`：调度 Architect 和 Tester。Architect 写设计、spec、ADR 草案；Tester 根据设计写测试计划。随后调度 Doc Reviewer 审查需求、设计、spec、ADR、test plan 的一致性。通过时写 `gate.md` 并进入 `ready-to-execute`；失败时写 `fix-requests/doc-fix-<n>.md` 并路由修复。
 
-`$execute`：调度 Developer。Developer 根据通过 gate 的 dispatch 写代码、测试代码、实现报告和测试结果。
+`$execute`：从已通过的 `gate.md` 完成当前 milestone：调度 Developer、调度 Code Reviewer、必要时调度 Tester 做覆盖审查、收集验收证据、finish run、归档 run、清空当前 state、结束 milestone 子代理上下文，并提交 milestone 变更。
 
 `$execute` 前，`gate.md` 必须是已通过的执行契约，包含允许的源码/测试路径和必须运行的测试。不要调度 Developer 修改契约之外的源码。
 
-`$code-review`：调度 Code Reviewer。必要时调度 Tester 审查测试结果是否覆盖 test plan。失败时主线程写 `fix-requests/code-fix-<n>.md` 并回到 `$execute`。
-
-`$verify`：根据 approved gate、测试计划、实现报告和 code review 结果收集验收证据。证据缺失时，向责任工作流节点路由 fix request。
-
-`$verify` 不是独立的状态机 phase。它在 `.agentflow/state.json.current_phase` 为 `ready-to-finish` 时执行；`$finish` 才会将 phase 推进到 `finishing`。
-
-`$finish`：调度 Auditor 总结当前 run；调度 owner 同步长期文档；归档 run；清空 current run；结束当前 milestone 子代理上下文。
+review、verification、finish、archive 和 milestone commit 是 `$execute` 内部阶段，不作为用户侧 workflow skill 暴露。
 
 ## 打回与路由
 
@@ -149,9 +151,10 @@ Verification:
 当 PM、Architect、Tester 返回 `fail`、`blocked`、`needs-context` 或 `done-with-concerns`，或 Doc Reviewer、Code Reviewer 返回非 `pass` 时，主线程先处理路由：
 
 1. 根据子代理回报识别问题和证据路径。
-2. 写或更新 `.agentflow/runs/<run-id>/fix-requests/*.md`。
-3. 若责任角色、允许输入路径和允许输出路径明确，调度对应子代理处理，并把 fix request 和相关 ledger 作为 allowed input。
-4. 修复后回到对应的工作流节点或 review gate。
+2. 按“决策路由”处理 `Decision Request`。
+3. 写或更新 `.agentflow/runs/<run-id>/fix-requests/*.md`。
+4. 若责任角色、允许输入路径和允许输出路径明确，调度对应子代理处理，并把 fix request 和相关 ledger 作为 allowed input。
+5. 修复后回到对应的工作流节点或 review gate。
 
 只有无法安全路由时，主线程才进入 blocked，或让 `$auto` 停止。典型情况包括：
 
@@ -165,11 +168,11 @@ Verification:
 
 ## 自动执行
 
-`$auto` 只执行当前 run 的下一个缺失工作流节点。每个节点结束后，主线程使用 state、调度状态和子代理回报。遇到打回时，先按“打回与路由”处理；只有无法安全路由时才停止自动推进。
+`$auto` 按 roadmap 串行执行 milestone。没有已确认 roadmap 时停止，并建议执行 `$plan`。每个 milestone 创建或恢复对应 run；没有 approved gate 时先运行 `$design`，然后运行 `$execute`。每个节点结束后，主线程使用 state、调度状态和子代理回报。遇到打回时，先按“打回与路由”处理；只有无法安全路由时才停止自动推进。
 
 ## Milestone 边界
 
-一个 run 表示一个 milestone 的执行单元。`$finish` 完成归档和 state 清理后，主线程必须提交当前 milestone 产生的代码、测试和文档变化，然后才能开始新的 milestone。
+一个 run 表示一个 milestone 的执行单元。`$execute` 完成归档和 state 清理后，主线程必须提交当前 milestone 产生的代码、测试和文档变化，然后才能开始新的 milestone。
 
 提交信息应简洁描述本次完成的用户可见变更，例如 `feat: add import workflow`、`fix: handle empty config`、`docs: update setup guide`。若没有文件变化，不创建空提交，并在 `.agentflow/runs/<run-id>/summary.md` 记录 no-op。
 

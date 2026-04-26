@@ -7,37 +7,38 @@ use serde::{Deserialize, Serialize};
 #[serde(default, deny_unknown_fields)]
 pub struct LogConfig {
     pub level: LogLevel,
+
     pub format: LogFormat,
 
-    #[serde(default = "crate::schema::defaults::log_timestamp")]
     pub timestamp: bool,
 }
 
 impl Default for LogConfig {
     fn default() -> Self {
         Self {
-            level: LogLevel::Warn,
-            format: LogFormat::Text,
+            level: LogLevel::default(),
+            format: LogFormat::default(),
             timestamp: true,
         }
     }
 }
 
 /// 日志级别。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum LogLevel {
-    Trace,
     Debug,
     Info,
+    #[default]
     Warn,
     Error,
 }
 
 /// 日志格式。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum LogFormat {
+    #[default]
     Text,
     Json,
 }

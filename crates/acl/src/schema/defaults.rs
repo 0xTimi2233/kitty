@@ -2,41 +2,10 @@
 
 use std::time::Duration;
 
-use crate::schema::common::rule::{Network, VlessPacketEncoding};
-
+use crate::schema::common::rule::{Network, SocksVersion, VlessPacketEncoding};
 /// 默认 true。
 pub const fn true_value() -> bool {
     true
-}
-
-/// 默认日志 timestamp。
-pub const fn log_timestamp() -> bool {
-    true
-}
-
-/// 默认 DNS cache 容量。
-pub const fn dns_cache_capacity() -> usize {
-    4096
-}
-
-/// 默认 lazy cache TTL。
-pub const fn lazy_cache_ttl() -> u64 {
-    86_400
-}
-
-/// 默认 lazy cache 响应 TTL。
-pub const fn lazy_cache_reply_ttl() -> u32 {
-    5
-}
-
-/// 默认 DNS cache dump 间隔。
-pub const fn dns_cache_dump_interval() -> u64 {
-    3_600
-}
-
-/// 默认 DNS cache dump 路径。
-pub fn dns_cache_dump_path() -> String {
-    ".cache/dump.db".to_owned()
 }
 
 /// 默认 DNS 端口。
@@ -80,16 +49,16 @@ pub const fn connect_timeout() -> Duration {
 }
 
 /// 默认 outbound network。
-pub fn outbound_network() -> Vec<Network> {
+pub fn bound_network() -> Vec<Network> {
     vec![Network::Tcp, Network::Udp]
+}
+
+/// 默认 SOCKS 版本。
+pub const fn socks_version() -> SocksVersion {
+    SocksVersion::V5
 }
 
 /// 默认 VLESS packet encoding。
 pub const fn vless_packet_encoding() -> VlessPacketEncoding {
     VlessPacketEncoding::Xudp
-}
-
-/// 默认 UDP over TCP version。
-pub const fn udp_over_tcp_version() -> u8 {
-    2
 }

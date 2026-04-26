@@ -8,13 +8,12 @@ use serde_with::skip_serializing_none;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct DnsCacheConfig {
-    #[serde(default = "crate::schema::defaults::true_value")]
     pub enable: bool,
 
-    #[serde(default = "crate::schema::defaults::dns_cache_capacity")]
-    pub capacity: usize,
+    pub capacity: u32,
 
     pub lazy_cache: LazyCacheConfig,
+
     pub dump: DnsCacheDumpConfig,
 }
 
@@ -22,7 +21,7 @@ impl Default for DnsCacheConfig {
     fn default() -> Self {
         Self {
             enable: true,
-            capacity: crate::schema::defaults::dns_cache_capacity(),
+            capacity: 4096,
             lazy_cache: LazyCacheConfig::default(),
             dump: DnsCacheDumpConfig::default(),
         }
@@ -34,13 +33,10 @@ impl Default for DnsCacheConfig {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct LazyCacheConfig {
-    #[serde(default)]
     pub enable: bool,
 
-    #[serde(default = "crate::schema::defaults::lazy_cache_ttl")]
     pub ttl: u64,
 
-    #[serde(default = "crate::schema::defaults::lazy_cache_reply_ttl")]
     pub reply_ttl: u32,
 }
 
@@ -48,8 +44,8 @@ impl Default for LazyCacheConfig {
     fn default() -> Self {
         Self {
             enable: false,
-            ttl: crate::schema::defaults::lazy_cache_ttl(),
-            reply_ttl: crate::schema::defaults::lazy_cache_reply_ttl(),
+            ttl: 86_400,
+            reply_ttl: 5,
         }
     }
 }
@@ -59,13 +55,10 @@ impl Default for LazyCacheConfig {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct DnsCacheDumpConfig {
-    #[serde(default)]
     pub enable: bool,
 
-    #[serde(default = "crate::schema::defaults::dns_cache_dump_path")]
     pub path: String,
 
-    #[serde(default = "crate::schema::defaults::dns_cache_dump_interval")]
     pub interval: u64,
 }
 
@@ -73,8 +66,8 @@ impl Default for DnsCacheDumpConfig {
     fn default() -> Self {
         Self {
             enable: false,
-            path: crate::schema::defaults::dns_cache_dump_path(),
-            interval: crate::schema::defaults::dns_cache_dump_interval(),
+            path: ".cache/dump.db".to_owned(),
+            interval: 3_600,
         }
     }
 }

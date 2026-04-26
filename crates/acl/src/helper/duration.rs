@@ -18,6 +18,7 @@ impl Default for RefreshInterval {
     }
 }
 
+/// "0"/"0s" 表示禁用 自动刷新
 impl Serialize for RefreshInterval {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where

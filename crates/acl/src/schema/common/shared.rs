@@ -3,6 +3,7 @@
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_with::skip_serializing_none;
 
 use crate::helper::serde_string;
@@ -34,7 +35,7 @@ pub struct DomainResolverOptions {
 /// TLS 配置。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct TlsConfig {
     #[serde(default = "crate::schema::defaults::true_value")]
     pub enabled: bool,
@@ -55,23 +56,10 @@ pub struct TlsConfig {
     pub max_version: Option<String>,
 }
 
-impl Default for TlsConfig {
-    fn default() -> Self {
-        Self {
-            enabled: true,
-            server_name: None,
-            insecure: false,
-            alpn: Vec::new(),
-            min_version: None,
-            max_version: None,
-        }
-    }
-}
-
 /// Multiplex 配置。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct MultiplexConfig {
     #[serde(default)]
     pub enabled: bool,
@@ -92,19 +80,6 @@ pub struct MultiplexConfig {
     pub padding: bool,
 }
 
-impl Default for MultiplexConfig {
-    fn default() -> Self {
-        Self {
-            enabled: false,
-            protocol: None,
-            max_connections: 0,
-            min_streams: 0,
-            max_streams: 0,
-            padding: false,
-        }
-    }
-}
-
 /// V2Ray transport。
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -117,7 +92,7 @@ pub enum V2RayTransport {
 /// WebSocket transport。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct WebSocketTransport {
     #[serde(default, deserialize_with = "serde_string::de_trim")]
     pub path: String,
@@ -126,19 +101,10 @@ pub struct WebSocketTransport {
     pub headers: BTreeMap<String, String>,
 }
 
-impl Default for WebSocketTransport {
-    fn default() -> Self {
-        Self {
-            path: String::new(),
-            headers: BTreeMap::new(),
-        }
-    }
-}
-
 /// HTTP transport。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct HttpTransport {
     #[serde(
         default,
@@ -156,21 +122,10 @@ pub struct HttpTransport {
     pub headers: BTreeMap<String, String>,
 }
 
-impl Default for HttpTransport {
-    fn default() -> Self {
-        Self {
-            host: Vec::new(),
-            path: String::new(),
-            method: String::new(),
-            headers: BTreeMap::new(),
-        }
-    }
-}
-
 /// gRPC transport。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct GrpcTransport {
     #[serde(default, deserialize_with = "serde_string::de_trim")]
     pub service_name: String,
@@ -185,17 +140,6 @@ pub struct GrpcTransport {
     pub permit_without_stream: bool,
 }
 
-impl Default for GrpcTransport {
-    fn default() -> Self {
-        Self {
-            service_name: String::new(),
-            idle_timeout: 0,
-            ping_timeout: 0,
-            permit_without_stream: false,
-        }
-    }
-}
-
 /// UDP over TCP。
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -207,20 +151,19 @@ pub enum UdpOverTcp {
 /// UDP over TCP options。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct UdpOverTcpOptions {
     #[serde(default = "crate::schema::defaults::true_value")]
     pub enabled: bool,
 
-    #[serde(default = "crate::schema::defaults::udp_over_tcp_version")]
-    pub version: u8,
+    #[serde(default)]
+    pub version: UdpOverTcpVersion,
 }
 
-impl Default for UdpOverTcpOptions {
-    fn default() -> Self {
-        Self {
-            enabled: true,
-            version: crate::schema::defaults::udp_over_tcp_version(),
-        }
-    }
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
+#[repr(u8)]
+pub enum UdpOverTcpVersion {
+    V1 = 1,
+    #[default]
+    V2 = 2,
 }

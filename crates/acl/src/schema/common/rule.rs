@@ -1,6 +1,7 @@
 //! 规则公共类型。
 
 use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
 /// 逻辑规则类型。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -26,11 +27,11 @@ pub enum Network {
 }
 
 /// IP 版本。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
+#[repr(u8)]
 pub enum IpVersion {
-    Ipv4,
-    Ipv6,
+    Ipv4 = 4,
+    Ipv6 = 6,
 }
 
 /// DNS 查询类型。
@@ -60,12 +61,6 @@ pub enum SocksVersion {
     V4A,
     #[serde(rename = "5")]
     V5,
-}
-
-impl Default for SocksVersion {
-    fn default() -> Self {
-        Self::V5
-    }
 }
 
 /// VLESS flow。

@@ -58,8 +58,8 @@ macro_rules! define_matcher_struct {
             #[serde(default, deserialize_with = "crate::helper::serde_string::de_one_or_many_trim")]
             pub source_port_range: Vec<String>,
 
-            #[serde(default, deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
-            pub source_mac_address: Vec<macaddr::MacAddr6>,
+            #[serde(default, deserialize_with = "crate::helper::serde_string::de_one_or_many_trim")]
+            pub source_mac_address: Vec<String>,
 
             #[serde(default, deserialize_with = "crate::helper::serde_string::de_one_or_many_trim")]
             pub process_name: Vec<String>,

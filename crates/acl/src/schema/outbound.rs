@@ -31,7 +31,7 @@ define_outbound_struct! {
 
             pub server_port: u16,
 
-            #[serde(default)]
+            #[serde(default = "defaults::socks_version")]
             pub version: SocksVersion,
 
             #[serde(default, deserialize_with = "serde_string::de_opt_trim")]
@@ -40,7 +40,7 @@ define_outbound_struct! {
             #[serde(default, deserialize_with = "serde_string::de_opt_trim")]
             pub password: Option<String>,
 
-            #[serde(default = "defaults::outbound_network", deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
+            #[serde(default = "defaults::bound_network", deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
             pub network: Vec<Network>,
 
             #[serde(default)]
@@ -63,7 +63,7 @@ define_outbound_struct! {
             #[serde(default)]
             pub flow: Option<VlessFlow>,
 
-            #[serde(default = "defaults::outbound_network", deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
+            #[serde(default = "defaults::bound_network", deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
             pub network: Vec<Network>,
 
             #[serde(default)]

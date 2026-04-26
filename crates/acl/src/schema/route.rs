@@ -14,9 +14,12 @@ use crate::schema::rule_set::RuleSet;
 /// route 配置。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct RouteConfig {
+    #[serde(default)]
     pub rules: Vec<RouteRule>,
+
+    #[serde(default)]
     pub rule_set: Vec<RuleSet>,
 
     #[serde(
@@ -28,15 +31,4 @@ pub struct RouteConfig {
 
     #[serde(default)]
     pub default_domain_resolver: Option<DomainResolver>,
-}
-
-impl Default for RouteConfig {
-    fn default() -> Self {
-        Self {
-            rules: Vec::new(),
-            rule_set: Vec::new(),
-            final_outbound: None,
-            default_domain_resolver: None,
-        }
-    }
 }

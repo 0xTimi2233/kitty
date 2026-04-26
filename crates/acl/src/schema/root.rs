@@ -12,23 +12,12 @@ use crate::schema::route::RouteConfig;
 /// 根配置。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct ConfigRoot {
+    #[serde(default)]
     pub log: LogConfig,
     pub dns: DnsConfig,
     pub inbounds: Vec<Inbound>,
     pub outbounds: Vec<Outbound>,
     pub route: RouteConfig,
-}
-
-impl Default for ConfigRoot {
-    fn default() -> Self {
-        Self {
-            log: LogConfig::default(),
-            dns: DnsConfig::default(),
-            inbounds: Vec::new(),
-            outbounds: Vec::new(),
-            route: RouteConfig::default(),
-        }
-    }
 }

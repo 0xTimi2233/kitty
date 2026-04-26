@@ -1,9 +1,11 @@
 //! inbound schema。
 
+use crate::schema::defaults;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 use crate::helper::serde_string;
+use crate::schema::common::rule::Network;
 use crate::schema::macros::inbound::define_inbound_struct;
 
 /// inbound。
@@ -19,21 +21,27 @@ pub enum Inbound {
 
 define_inbound_struct! {
     pub struct DirectInbound {
-        extra {}
+        extra {
+            #[serde(default = "defaults::bound_network", deserialize_with = "crate::helper::one_or_many::de_one_or_many")]
+            pub network: Vec<Network>,
+        }
     }
 }
 
 define_inbound_struct! {
     pub struct DnsInbound {
-        extra {}
+        extra {
+            #[serde(default = "defaults::bound_network", skip_deserializing)]
+            pub network: Vec<Network>,
+        }
     }
 }
 
 define_inbound_struct! {
     pub struct TcInbound {
         extra {
-            #[serde(deserialize_with = "serde_string::de_trim")]
-            pub interface: String,
+            #[serde(default = "defaults::bound_network", skip_deserializing)]
+            pub network: Vec<Network>,
         }
     }
 }

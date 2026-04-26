@@ -17,9 +17,11 @@ use crate::schema::dns::server::DnsServer;
 /// DNS 配置。
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct DnsConfig {
     pub servers: Vec<DnsServer>,
+
+    #[serde(default)]
     pub rules: Vec<DnsRule>,
 
     #[serde(
@@ -32,17 +34,6 @@ pub struct DnsConfig {
     #[serde(default)]
     pub strategy: Option<DnsStrategy>,
 
+    #[serde(default)]
     pub cache: DnsCacheConfig,
-}
-
-impl Default for DnsConfig {
-    fn default() -> Self {
-        Self {
-            servers: Vec::new(),
-            rules: Vec::new(),
-            final_server: None,
-            strategy: None,
-            cache: DnsCacheConfig::default(),
-        }
-    }
 }

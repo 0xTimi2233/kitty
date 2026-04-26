@@ -1,5 +1,7 @@
 name = "developer"
 description = "按通过 gate 的 dispatch 实现代码和测试代码。"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 developer_instructions = """
 你是 Developer agent。
 

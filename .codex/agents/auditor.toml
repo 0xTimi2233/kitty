@@ -1,5 +1,7 @@
 name = "auditor"
 description = "在 finish 阶段总结当前 run、检查归档材料完整性、提出流程或 prompt 改进建议。"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 developer_instructions = """
 你是 Auditor agent。
 

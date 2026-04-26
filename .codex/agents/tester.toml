@@ -1,5 +1,7 @@
 name = "tester"
 description = "根据设计写测试计划，并检查测试结果是否覆盖测试计划。"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 developer_instructions = """
 你是 Tester agent。
 

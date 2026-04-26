@@ -1,4 +1,4 @@
-//! DNS 上游适配骨架。
+//! DNS upstream transport 适配。
 
 pub mod client;
 pub mod h3;

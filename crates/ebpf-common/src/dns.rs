@@ -1,7 +1,7 @@
-//! DNS eBPF map 共享布局。
+//! eBPF DNS cache key/value。
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct DnsCacheKey {
     pub domain_hash_hi: u64,
     pub domain_hash_lo: u64,
@@ -10,17 +10,9 @@ pub struct DnsCacheKey {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct DnsCacheValueV4 {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct DnsCacheValue {
     pub action: u8,
+    pub record_count: u8,
     pub ttl: u32,
-    pub ipv4: u32,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct DnsCacheValueV6 {
-    pub action: u8,
-    pub ttl: u32,
-    pub ipv6: [u8; 16],
 }

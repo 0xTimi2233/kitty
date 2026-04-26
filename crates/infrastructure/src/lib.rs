@@ -1,4 +1,4 @@
-//! 基础设施与外部库防腐入口。
+//! 基础设施适配层。
 
 pub mod config;
 pub mod dns;

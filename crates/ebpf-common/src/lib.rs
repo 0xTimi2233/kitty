@@ -1,6 +1,5 @@
-#![no_std]
+//! eBPF 与用户态共享布局。
 
-//! eBPF 用户态与内核态共享布局。
-
+pub mod action;
 pub mod dns;
 pub mod route;

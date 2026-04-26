@@ -1,4 +1,4 @@
-//! DNS 入站适配骨架。
+//! DNS inbound 适配。
 
 pub mod tcp;
 pub mod udp;

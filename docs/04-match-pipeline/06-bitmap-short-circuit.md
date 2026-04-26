@@ -1,38 +1,19 @@
-# 06 Bitmap Short Circuit
+# Bitmap Short Circuit
 
 ## 职责
 
-Bitmap Short Circuit 根据条件组语义合并候选 bitmap，快速排除不可能命中的规则。
+用 Roaring bitmap 做候选集合交并差，尽可能缩小 first-match evaluator 输入。
 
 ## 输入
 
-- `ConditionBitmapSet`
-- `RuleGroupLayout`
+运行期请求上下文和当前 RuntimeModel handle。
 
 ## 输出
 
-- `CandidateRuleBitmap`
+匹配结果、action 执行结果或可观测事件。
 
-## 合并语义
+## 性能要求
 
-- 同一 group 内条件为 OR。
-- 不同 group 之间为 AND。
-- 空 group 为 ANY。
-- `not` 节点通过对应补集或 evaluator 处理。
-
-## 短路策略
-
-- 如果某个必需 group 得到空 bitmap，可立即返回无候选。
-- bitmap 合并应优先处理候选规模更小的 group。
-- 对于无法可靠 bitmap 化的条件，保留为 evaluator 阶段确认。
-
-## first-match
-
-Bitmap Short Circuit 只生成候选集合，不决定命中的第一条规则。最终顺序由 First Match Evaluator 保证。
-
-## 测试要点
-
-- OR group 合并正确。
-- AND group 合并正确。
-- ANY group 不影响结果。
-- bitmap 短路不会改变 slow matcher 结果。
+- 避免无关上下文补充。
+- 避免临时分配和字符串复制。
+- 保持 first-match 语义。

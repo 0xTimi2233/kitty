@@ -1,4 +1,4 @@
-//! DNS 协议、入站与上游适配。
+//! DNS 外部库防腐适配。
 
 pub mod inbound;
 pub mod protocol;

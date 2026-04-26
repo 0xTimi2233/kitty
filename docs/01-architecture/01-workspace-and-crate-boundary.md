@@ -1,28 +1,19 @@
 # Workspace 与 crate 边界
 
-```text
-crates/bin             管理面入口
-crates/application     控制面编排
-crates/domain          领域模型与运行态契约
-crates/infrastructure  平台适配与外部库防腐
-crates/schema          配置输入 schema
-crates/ebpf-common     eBPF 共享布局
-crates/ebpf-programs   Aya eBPF program 骨架
-```
+`crates/bin` 是 composition root，只负责启动、装配和关闭。
 
-## 依赖方向
+`crates/interfaces` 负责 CLI、API、signal，把外部请求转换成 application command/query。
 
-```text
-bin -> application
-bin -> infrastructure
-application -> schema
-application -> domain
-infrastructure -> schema
-infrastructure -> domain
-infrastructure -> ebpf-common
-ebpf-programs -> ebpf-common
-```
+`crates/application/control-plane` 负责 compile-pipeline、reload、runtime publish、cache cleanup 调度。
 
-`domain` 不依赖 `schema` 和 `infrastructure`。
+`crates/application/data-plane` 负责 match-pipeline、DNS session、proxy session、runtime handle。
 
-`infrastructure -> application` 仅用于实现 application 层定义的端口 trait。
+`crates/domain` 保存 Rule IR、Runtime Model、Matcher Model、Action Model。
+
+`crates/acl` 保存配置 schema、serde helper、默认值和局部 normalize。
+
+`crates/infrastructure` 保存配置文件读取、DNS protocol adapter、storage、network、logging、Aya userspace loader。
+
+`crates/ebpf-common` 保存共享 repr(C) 数据布局。
+
+`crates/ebpf-programs` 保存 Aya kernel-side program 骨架。

@@ -1,72 +1,15 @@
 # 配置契约
 
-Root 字段：
+根配置字段：
 
-- `log`
-- `dns`
-- `inbounds`
-- `outbounds`
-- `route`
+```text
+log
+dns
+inbounds
+outbounds
+route
+```
 
-## log
+ACL schema 负责反序列化、默认值填充和局部 normalize。基础校验、结构 normalize、语义收集、语义校验和 runtime 构建由 control-plane 完成。
 
-字段：
-
-- `level`: `trace | debug | info | warn | error`，默认 `warn`。
-- `format`: `text | json`，默认 `text`。
-- `timestamp`: 默认 `true`。
-
-## dns
-
-字段：
-
-- `servers`
-- `rules`
-- `cache`
-
-DNS server 类型：
-
-- `udp`
-- `tcp`
-- `tls`
-- `quic`
-- `https`
-- `h3`
-
-DNS action：
-
-- `route`
-- `reject`
-- `predefined`
-
-## inbound
-
-类型：
-
-- `direct`
-- `socks`
-- `vless`
-- `dns`
-- `tc`
-
-## outbound
-
-类型：
-
-- `direct`
-- `socks`
-- `vless`
-
-## route
-
-字段：
-
-- `rules`
-- `final`
-- `default_domain_resolver`
-- `rule_set`
-
-route action：
-
-- `route`
-- `reject`
+必填字段不在 schema 中提供默认值。带明确默认值的字段在 schema 层填充。可选字段只有在缺省本身有语义时使用 `Option<T>`。

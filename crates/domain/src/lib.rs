@@ -1,5 +1,7 @@
-//! 领域模型入口。
+//! 核心领域模型。
 
+pub mod action;
+pub mod cache;
 pub mod config;
 pub mod dns;
 pub mod matcher;

@@ -1,56 +1,50 @@
-# Kitty 文档阅读顺序
+# Kitty 文档索引
 
-推荐按以下顺序阅读：
+## 第一遍：了解项目
 
-1. `00-overview/00-product-goals.md`
-2. `00-overview/01-terminology.md`
-3. `01-architecture/00-ddd-boundary.md`
-4. `01-architecture/01-workspace-and-crate-boundary.md`
-5. `01-architecture/02-runtime-model.md`
-6. `01-architecture/03-rule-ir-model.md`
-7. `02-config/00-config-contract.md`
-8. `02-config/01-schema-code-guide.md`
-9. `02-config/02-default-values.md`
-10. `02-config/03-normalize-rules.md`
-11. `03-compile-pipeline/00-orchestration.md`
-12. `03-compile-pipeline/01-log-bootstrap.md`
-13. `03-compile-pipeline/02-config-decode.md`
-14. `03-compile-pipeline/03-schema-normalize.md`
-15. `03-compile-pipeline/04-reload-diff-precheck.md`
-16. `03-compile-pipeline/05-basic-validate.md`
-17. `03-compile-pipeline/06-semantic-validate.md`
-18. `03-compile-pipeline/07-loop-check.md`
-19. `03-compile-pipeline/08-rule-set-reference-prune.md`
-20. `03-compile-pipeline/09-rule-set-load-cache.md`
-21. `03-compile-pipeline/10-rule-set-decode-verify.md`
-22. `03-compile-pipeline/11-rule-set-expand-merge.md`
-23. `03-compile-pipeline/12-priority-flattening.md`
-24. `03-compile-pipeline/13-string-interning.md`
-25. `03-compile-pipeline/14-match-index-compile.md`
-26. `03-compile-pipeline/15-runtime-plan.md`
-27. `03-compile-pipeline/16-listener-apply-plan.md`
-28. `03-compile-pipeline/17-atomic-publish.md`
-29. `04-match-pipeline/00-orchestration.md`
-30. `04-match-pipeline/01-ingress-classify.md`
-31. `04-match-pipeline/02-context-normalize.md`
-32. `04-match-pipeline/03-dns-cache-lookup.md`
-33. `04-match-pipeline/04-context-enrich.md`
-34. `04-match-pipeline/05-index-probe.md`
-35. `04-match-pipeline/06-bitmap-short-circuit.md`
-36. `04-match-pipeline/07-first-match-evaluator.md`
-37. `04-match-pipeline/08-action-dispatch.md`
-38. `04-match-pipeline/09-ebpf-map-sync.md`
-39. `05-operations/00-start-and-reload.md`
-40. `05-operations/01-logging-and-error.md`
-41. `06-implementation/00-project-directory.md`
-42. `06-implementation/01-dependency-selection.md`
-43. `06-implementation/02-coding-standard.md`
-44. `06-implementation/03-ksr-binary-format.md`
-45. `07-testing/00-testing-standard.md`
-46. `07-testing/01-schema-tests.md`
-47. `07-testing/02-compile-pipeline-tests.md`
-48. `07-testing/03-match-pipeline-tests.md`
-49. `07-testing/04-reload-and-cache-tests.md`
-50. `07-testing/05-ebpf-tests.md`
-51. `07-testing/06-performance-testing.md`
-52. `07-testing/07-test-data-and-fixtures.md`
+1. `00-overview/00-reading-order.md`
+2. `00-overview/01-product-goals.md`
+3. `00-overview/02-scope.md`
+4. `00-overview/03-terminology.md`
+
+## 第二遍：理解架构
+
+1. `01-architecture/00-layered-ddd.md`
+2. `01-architecture/01-workspace-and-crate-boundary.md`
+3. `01-architecture/02-dependency-direction.md`
+4. `01-architecture/03-management-control-data-plane.md`
+5. `01-architecture/04-runtime-model.md`
+6. `01-architecture/05-rule-ir-model.md`
+7. `01-architecture/06-ebpf-architecture.md`
+
+## 第三遍：理解配置契约
+
+1. `02-config/00-config-contract.md`
+2. `02-config/01-acl-schema.md`
+3. `02-config/02-default-values.md`
+4. `02-config/03-normalize-rules.md`
+5. `02-config/04-logging-config.md`
+6. `02-config/05-dns-config.md`
+7. `02-config/06-route-config.md`
+8. `02-config/07-rule-set-config.md`
+
+## 第四遍：理解两个 pipeline
+
+1. `03-compile-pipeline/00-orchestration.md`
+2. `04-match-pipeline/00-orchestration.md`
+
+## 第五遍：理解运行与实现
+
+1. `05-operations/00-process-bootstrap.md`
+2. `05-operations/01-start.md`
+3. `05-operations/02-external-reload.md`
+4. `05-operations/03-internal-rule-set-refresh.md`
+5. `05-operations/04-cache-cleanup.md`
+6. `05-operations/05-logging-and-error.md`
+7. `06-implementation/00-project-directory.md`
+8. `06-implementation/01-coding-standard.md`
+9. `06-implementation/02-dependency-selection.md`
+10. `06-implementation/03-acl-code-guide.md`
+11. `06-implementation/04-ksr-binary-format.md`
+12. `07-testing/00-testing-standard.md`
+13. `07-testing/06-performance-testing.md`

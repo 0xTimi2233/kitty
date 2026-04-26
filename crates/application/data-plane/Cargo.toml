@@ -1,0 +1,9 @@
+[package]
+name = "kitty-data-plane"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+kitty-domain = { path = "../../domain" }
+kitty-ebpf-common = { path = "../../ebpf-common" }

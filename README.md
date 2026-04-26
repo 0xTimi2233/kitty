@@ -1,41 +1,37 @@
 # Kitty Gateway
 
-Kitty Gateway 是一个面向 Linux 网关场景的高性能 DNS + Proxy Gateway 项目骨架。
+Kitty Gateway 是一个面向 Linux 6.1+ 的高性能 DNS + Proxy Gateway 项目骨架。
 
-本仓库当前包含：
+项目目标：
 
-- Rust workspace 多 crate 骨架。
-- DDD 风格模块边界。
-- `schema` 输入防腐 crate。
-- DNS / Route / RuleSet 配置 schema。
-- Aya eBPF 分层骨架。
-- compile-pipeline 与 match-pipeline 需求文档。
-
-## 阅读顺序
-
-1. `docs/README.md`
-2. `docs/00-overview/`
-3. `docs/01-architecture/`
-4. `docs/02-config/`
-5. `docs/03-compile-pipeline/`
-6. `docs/04-match-pipeline/`
-7. `docs/05-operations/`
-8. `docs/06-implementation/`
-9. `docs/07-testing/`
+- 数据面热路径追求极致性能、低分支、低分配。
+- 控制面将用户配置编译为只读运行态模型。
+- 管理面通过 CLI、signal、未来 API 调用控制面能力。
+- 通过 ACL 与 infrastructure 隔离外部输入和外部库类型。
 
 ## Workspace
 
 ```text
-crates/bin             管理面入口
-crates/application     控制面编排
-crates/domain          领域模型与运行态契约
-crates/infrastructure  平台适配与外部库防腐
-crates/schema          配置输入 schema
-crates/ebpf-common     eBPF 用户态/内核态共享布局
-crates/ebpf-programs   Aya eBPF program 骨架
+crates/
+  bin/                         # 最终二进制入口与 composition root
+  interfaces/                  # CLI / API / signal 外部入口
+  application/control-plane/   # compile-pipeline / reload / publish
+  application/data-plane/      # match-pipeline / DNS session / proxy session
+  domain/                      # 领域模型、Rule IR、Runtime Model、Matcher Model
+  infrastructure/              # 文件、网络、DNS protocol、storage、logging、Aya loader 适配
+  acl/                         # 配置输入防腐层：schema、serde、默认值、局部 normalize
+  ebpf-common/                 # 用户态与 eBPF program 共享 repr(C) 类型
+  ebpf-programs/               # Aya eBPF kernel-side program 骨架
 ```
 
-## 当前边界
+## 阅读顺序
 
-当前 ZIP 是干净骨架与 schema 初版，不包含数据面完整实现。
-`schema` 只负责反序列化、默认值填充、输入 normalize 与重复字段宏生成，不负责校验、下载、展开、合并或运行态构建。
+1. `docs/README.md`
+2. `docs/00-overview/00-reading-order.md`
+3. `docs/01-architecture/00-layered-ddd.md`
+4. `docs/02-config/00-config-contract.md`
+5. `docs/03-compile-pipeline/00-orchestration.md`
+6. `docs/04-match-pipeline/00-orchestration.md`
+7. `docs/05-operations/00-process-bootstrap.md`
+8. `docs/06-implementation/00-project-directory.md`
+9. `docs/07-testing/00-testing-standard.md`

@@ -1,4 +1,4 @@
-//! Aya 用户态 eBPF 适配骨架。
+//! Aya userspace loader 适配。
 
 pub mod attach;
 pub mod lifecycle;

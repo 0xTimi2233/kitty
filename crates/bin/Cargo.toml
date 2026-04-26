@@ -1,13 +1,15 @@
 [package]
 name = "kitty-bin"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
 license.workspace = true
+
+[dependencies]
+kitty-interfaces = { path = "../interfaces" }
+kitty-control-plane = { path = "../application/control-plane" }
+kitty-data-plane = { path = "../application/data-plane" }
+kitty-infrastructure = { path = "../infrastructure" }
 
 [[bin]]
 name = "kitty"
 path = "src/main.rs"
-
-[dependencies]
-kitty-application = { path = "../application" }
-kitty-infrastructure = { path = "../infrastructure" }

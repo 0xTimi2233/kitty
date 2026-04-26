@@ -1,11 +1,10 @@
 [package]
 name = "kitty-infrastructure"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
-rust-version.workspace = true
 license.workspace = true
 
 [dependencies]
+kitty-acl = { path = "../acl" }
 kitty-domain = { path = "../domain" }
-kitty-schema = { path = "../schema" }
 kitty-ebpf-common = { path = "../ebpf-common" }

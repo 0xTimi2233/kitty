@@ -1,0 +1,9 @@
+[package]
+name = "kitty-interfaces"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+kitty-control-plane = { path = "../application/control-plane" }
+kitty-data-plane = { path = "../application/data-plane" }

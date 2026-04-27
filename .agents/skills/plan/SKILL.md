@@ -12,8 +12,7 @@ description: 探索、审计或确认需求，并准备下一 milestone run。
 - `.codex/prompts/main-thread.md`
 - `codexspec/vision.md`
 - `codexspec/roadmap.md`
-- 继续 explore track 时的 `codexspec/runtime/explore/<explore-id>/brief.md`
-- 继续 preflight track 时的 `codexspec/runtime/preflight/<preflight-id>/brief.md`
+- 继续 explore track 或 preflight track 时，优先使用上一次子代理最终报告和 `dispatch-ledger.md` 判断状态；只有用户或子代理报告明确指向具体 runtime 文件时才读取该文件
 - 用户指定的需求来源路径
 - `codexspec/runtime/state.json`
 - active planning session 存在时，读取 `codexspec/runtime/state.json` 中的 `current_planning_session` 和 `planning_track` 字段
@@ -53,7 +52,7 @@ description: 探索、审计或确认需求，并准备下一 milestone run。
 
 ## PM 决策处理
 
-若 PM 返回主线程无法自行解决的 `Decision Request`，将编号选项呈现给用户；把用户选择写入 `task.md` 的 `User decisions`，再带着该决策重新调度 PM。
+若 PM 返回主线程无法自行解决的 `Decision Request`，将编号选项呈现给用户；把用户选择写入 `task.md` 的 `User decisions`，再带着该决策发回同一 PM agent。
 
 ## 必须产出
 

@@ -23,10 +23,12 @@
 
 ### 动态上下文
 
-每个 workflow skill 开始时，加载动态上下文
+每个 workflow skill 开始时，加载最小动态上下文
 
 - `codexspec/runtime/state.json`
-- 当前步骤需要的 current run 或 planning-session 文件
+- 当前步骤需要的 dispatch ledger、dispatch packet 或 workflow 指针文件
+
+需要向用户呈现决策时，优先使用子代理最终报告；若报告指向具体决策文件，只读取该具体文件，不顺带读取同目录其他 runtime 文件。
 
 ## Skill 流程图
 
@@ -59,11 +61,16 @@ flowchart TD
 2. 根据 `file-index.md` 创建或更新所需 runtime 文件。
 3. 为一个子代理任务写一个 dispatch packet。
 4. 在 dispatch ledger 追加一行，状态为 `queued`。
-5. 启动子代理时只传 dispatch packet 路径，然后记录 runtime agent id，并将该行设为 `running`。
-6. 收到子代理回复后，按 `report-contract.md` 解读报告，更新该行；到达结束状态时关闭子代理。
+5. 调度子代理时只传 dispatch packet 路径。
+若同一 run 或 planning session 内已有同角色 agent， 默认复用该 agent：先 `resume_agent`，再用 `send_input` 发送新 dispatch。
+只有没有既有 agent、既有 agent 不可恢复、角色不同、或明确需要并行时，才 `spawn_agent` 新 agent，并在 ledger notes 写明原因。
+记录 runtime agent id，并将该行设为 `running`。
+6. 收到子代理回复后，按 `report-contract.md` 解读报告，更新该行；
+不要主动读取子代理写入的 runtime 产物正文，除非最终报告或用户明确要求读取具体文件。
+不要因为单轮 dispatch 进入结束状态就关闭 agent；同一 run 或 planning session 可能继续把后续修复、决策或 closure 发回同一 agent。
 7. `pass` 时继续当前 skill。
 8. `fail`、`blocked`、`needs-context` 或 reviewer 非 pass 时，执行打回与路由；`done-with-concerns` 按 `Required next action` 处理。
-9. 跨越 milestone 边界前，完成 finish、archive、commit 或 no-op 记录、清理 state，并关闭或标记 stale 所有打开的子代理。
+9. 跨越 milestone 或 planning session 边界前，完成 finish、archive、commit 或 no-op 记录、清理 state，并关闭或标记 stale 所有打开的子代理。
 
 ## State
 
@@ -82,7 +89,9 @@ finishing
 blocked
 ```
 
-`codexspec/runtime/state.json` 是 workflow 指针。`current_milestone` 指向 `current_run` 对应的 roadmap milestone；`codexspec/roadmap.md` 仍是权威 milestone 记录。
+`codexspec/runtime/state.json` 是 workflow 指针。
+
+`current_milestone` 指向 `current_run` 对应的 roadmap milestone；`codexspec/roadmap.md` 仍是权威 milestone 记录。
 
 阻塞不变量：子代理 `Status: blocked` 是输入信号，不等于 workflow state 已阻塞。
 
@@ -128,12 +137,11 @@ dispatch ledger 使用：
 
 ## 打回与路由
 
-
 PM、Architect、Tester 返回 `fail`、`blocked`、`needs-context`，或 Doc Reviewer、Code Reviewer 返回非 `pass` 时，先路由问题再停止。
 
 `done-with-concerns` 仅在存在明确 `Required next action` 时路由。
 
-1. 根据子代理报告识别问题和证据路径。
+1. 根据子代理报告识别问题和证据路径；证据路径默认只作为审计链接，不作为主线程必须读取的上下文。
 2. 按决策路由处理 `Decision Request`。
 3. 存在 run 时，写或更新 `codexspec/runtime/runs/<run-id>/fix-requests/*.md`。
 4. 若责任角色、allowed inputs、allowed outputs 明确，带 fix request 和相关 review ledger 调度该角色。

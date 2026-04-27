@@ -1,6 +1,10 @@
 # 文件索引
 
-所有路径都使用 repo-relative path。不使用绝对路径、代称或模糊名称。探索或审计任务的输入可使用 repo-relative 目录或 glob 作为 input scope；输出路径必须是具体文件。
+所有路径都使用 repo-relative path。不使用绝对路径、代称或模糊名称。
+
+探索或审计任务的输入可使用 repo-relative 目录或 glob 作为 input scope；输出路径必须是具体文件。
+
+如果子代理缺失必要上下文，而不在本次主线程`dispatch packet`内，可以返回`needs-context`请求主线程允许
 
 ## 长期文件
 

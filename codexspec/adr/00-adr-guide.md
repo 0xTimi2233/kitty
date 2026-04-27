@@ -2,7 +2,7 @@
 
 ADR 文件由 Architect 维护。
 
-只有长期架构决策才创建 `agentflow/adr/0001-title.md`。
+只有长期架构决策才创建 `codexspec/adr/0001-title.md`。
 
 | 字段 | 内容 |
 |---|---|

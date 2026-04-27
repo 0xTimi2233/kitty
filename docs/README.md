@@ -1,6 +1,6 @@
 # Kitty Gateway
 
-Kitty Gateway 是一个面向 Linux 6.1+ 的高性能 DNS + Proxy Gateway 项目骨架。
+Kitty Gateway 是一个面向 Linux 6.1+ 的高性能 DNS + Proxy Gateway。
 
 项目目标：
 

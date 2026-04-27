@@ -2,7 +2,21 @@
 
 ## 职责
 
-在收集完成后统一校验 tag 重复、引用缺失、引用类型错误、action target 解析、final/detour 固化。
+Semantic Validate 在 semantic collect 完成后执行，负责所有跨对象语义校验。
+
+本阶段必须校验：
+
+- DNS server tag、inbound tag、outbound tag、rule_set tag 不重复。
+- `dns.final` 已显式配置，引用存在且引用类型是 DNS server。
+- `route.final` 已显式配置，引用存在且引用类型是 outbound。
+- DNS rule action target 存在且类型正确。
+- route rule action target 存在且类型正确。
+- inbound/outbound `detour` 引用存在且类型正确。
+- domain resolver 引用存在且类型正确。
+- rule_set 引用存在且类型正确。
+- final、detour 和 action target 可在 runtime model 中固化。
+
+缺失 final、引用不存在、引用类型错误或重复 tag 都必须失败。
 
 ## 输入
 
@@ -11,6 +25,8 @@
 ## 输出
 
 更新后的编译上下文或明确失败原因。
+
+失败原因必须可定位到配置路径。错误消息使用英文。
 
 ## 不变量
 

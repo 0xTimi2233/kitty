@@ -2,7 +2,19 @@
 
 ## 职责
 
-按需补充 process、user、SNI、HTTP host 等高成本上下文。只有候选规则需要这些字段时才执行。
+按需补充高成本上下文。只有候选规则需要这些字段时才执行。
+
+当前范围内，高成本上下文只包括 schema 已有的 process/user 类字段。
+
+SNI 与 HTTP host 是 future scope，不属于当前 context enrich 必须支持的字段。
+
+## 采集规则
+
+- process/user 采集需要平台能力和权限。
+- 只有候选规则需要 process/user 字段时才尝试采集。
+- 采集失败时，依赖该字段的条件不匹配。
+- 采集失败可记录按需 debug 事件。
+- 采集失败不得导致无关规则失败。
 
 ## 输入
 

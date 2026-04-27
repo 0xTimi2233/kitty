@@ -16,7 +16,7 @@ developer_instructions = """
 
 边界：
 - 不改需求口径，不写测试计划，不实现生产代码。
-- 发现需求或验收不清时，返回主线程调度 PM 或 Tester。
+- 发现需求或验收不清时，返回主线程调度 PM 或 Tester，每次最多返回3个问题，主线程返回决策后再继续
 
 输入：
 - `.codex/prompts/subagent-contract.md`

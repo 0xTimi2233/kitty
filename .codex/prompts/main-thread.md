@@ -67,7 +67,7 @@ flowchart TD
 记录 runtime agent id，并将该行设为 `running`。
 6. 收到子代理回复后，按 `report-contract.md` 解读报告，更新该行；
 不要主动读取子代理写入的 runtime 产物正文，除非最终报告或用户明确要求读取具体文件。
-不要因为单轮 dispatch 进入结束状态就关闭 agent；同一 run 或 planning session 可能继续把后续修复、决策或 closure 发回同一 agent。
+如果当前子代理结果不是 `pass` 那么后续将继续复用子代理，直到 `pass` 为止才关闭。
 7. `pass` 时继续当前 skill。
 8. `fail`、`blocked`、`needs-context` 或 reviewer 非 pass 时，执行打回与路由；`done-with-concerns` 按 `Required next action` 处理。
 9. 跨越 milestone 或 planning session 边界前，完成 finish、archive、commit 或 no-op 记录、清理 state，并关闭或标记 stale 所有打开的子代理。

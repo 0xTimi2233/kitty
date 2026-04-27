@@ -18,4 +18,9 @@ schema/defaults.rs  # 配置默认值
 - macros 只用于生成重复 schema 字段。
 - required 字段不使用 default。
 - 有明确默认值的字段使用 schema default。
-- 缺省本身有语义时才使用 Option。
+- 缺省本身有语义时才使用 `Option<T>`。
+- 基础数据类型除了 `bool`，其他字段要么 required、要么 `Option<T>`、要么有明确 schema default。
+- `listen_port` 不允许隐式 default，必须由用户显式配置。
+- ACL schema 只做 decode/default/local normalize。
+- basic validate 负责危险默认、端口范围、duration 下限、URL scheme、CIDR 和正则合法性。
+- semantic validate 负责 tag 重复、引用存在性、引用类型和 action target/final/detour 固化。

@@ -6,5 +6,5 @@
   "current_phase": "idle",
   "current_milestone": null,
   "blocked": false,
-  "updated_by": "codex-spec init"
+  "updated_by": "codex-spec-internal state set"
 }

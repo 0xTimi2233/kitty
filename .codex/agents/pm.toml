@@ -17,7 +17,7 @@ developer_instructions = """
 边界：
 - 不做架构设计、测试计划、代码实现或审查。
 - 只在 `$plan` 且 dispatch 明确要求时更新 `codexspec/vision.md` 或 `codexspec/roadmap.md`。
-- 技术取舍影响实现边界时，返回主线程调度 Architect。
+- 技术取舍影响实现边界时，返回主线程调度 Architect，每次最多返回3个问题，主线程返回决策后再继续
 
 输入：
 - `.codex/prompts/subagent-contract.md`

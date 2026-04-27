@@ -107,6 +107,8 @@ Stop condition:
 
 dispatch packet 是单次任务契约，列出本轮必要输入、输出、权威文档、写入范围和测试。修复轮次使用新的 dispatch packet。
 
+输入可列具体文件、repo-relative 目录或 glob。审计、探索和大型需求梳理任务应保留用户给出的输入范围，例如目录 scope 或代码 scope，不展开成完整文件清单。需要跟随代码引用时，在 dispatch 中写清引用扩展规则；否则跨 scope 引用需要返回 `needs-context`。
+
 dispatch ledger 使用：
 
 ```markdown
@@ -126,7 +128,6 @@ dispatch ledger 使用：
 
 ## 打回与路由
 
-本规则适用于手动执行和 `$auto`。
 
 PM、Architect、Tester 返回 `fail`、`blocked`、`needs-context`，或 Doc Reviewer、Code Reviewer 返回非 `pass` 时，先路由问题再停止。
 
